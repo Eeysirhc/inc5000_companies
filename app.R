@@ -21,6 +21,14 @@ company_parsed <- company_data %>%
   mutate(pct_count = count / sum(count),
          pct_revenue = revenue_millions / sum(revenue_millions)) 
 
+# INDUSTRIES INDEX
+industries <- company_data %>% 
+  select(industry) %>% 
+  distinct() %>% 
+  filter(!grepl(",", industry)) %>% 
+  mutate(x = row_number()) %>% 
+  spread(industry, x)
+
 # TOP COMPANIES BY REVENUE
 top_companies <- company_data %>% 
   mutate(employees = as.numeric(sub(",", "", employees)),
@@ -47,7 +55,7 @@ ui <- fluidPage(
                                 "read more about that here.", target = "_blank")),
       
       br(),
-      varSelectInput("industry_variable", "Select Industry:", industries),  
+      varSelectInput("industry_variable", "Select Industry:", industries, selected = "Health"),  
       
       br(),
       strong("Data Source"),
